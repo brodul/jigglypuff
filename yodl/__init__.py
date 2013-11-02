@@ -23,6 +23,5 @@ def main(global_config, **settings):
     config.add_static_view('media', 'media', cache_max_age=3600)
     config.add_route('home', '/')
     config.include('pyramid_jinja2')
-    config.include('pyramid_celery')
     config.scan()
     return config.make_wsgi_app()
