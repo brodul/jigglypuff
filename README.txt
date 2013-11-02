@@ -1,1 +1,25 @@
-yodl README
+This is pre-alfa. :D
+
+Make sure you have the packets:
+youtube-dl
+rabbitmq
+python-virtualenv
+
+Make a virtualenv in the root of the project:
+virtual-env --no-site-packages .
+
+Activate the virtual env:
+source bin/activate
+
+Install the deps:
+python setup.py install
+
+Run the dev server:
+pserve production.ini
+
+Run the MQ server:
+rabbitmq-server -detached
+
+Run the worker:
+cd yodl/yodl
+celery -A tasks worker --loglevel=INFO &
