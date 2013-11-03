@@ -45,6 +45,7 @@
         <th>Worker</th>
         <th>Song name</th>
       </tr>
+      {% if queue%}
       {% for worker, tasks in queue.iteritems() %}
       {% for task in tasks %}
       <tr>
@@ -53,6 +54,7 @@
       </tr>
       {% endfor %}
       {% endfor %}
+      {% endif %}
     </table>
     <hr />
     <h3>Finished:</h3>
