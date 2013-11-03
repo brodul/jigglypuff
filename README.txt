@@ -2,11 +2,11 @@ This is pre-alfa. :D
 
 Make sure you have the packets:
 youtube-dl
-rabbitmq
+rabbitmq-server
 python-virtualenv
 
 Make a virtualenv in the root of the project:
-virtual-env --no-site-packages .
+virtualenv --no-site-packages .
 
 Activate the virtual env:
 source bin/activate
