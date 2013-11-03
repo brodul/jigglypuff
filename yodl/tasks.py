@@ -24,6 +24,8 @@ def transcode(url):
     """docstring for dl_transcode"""
     id_ = get_id(url)
 
+    if id_ in Task_DBSession.query(SongItem.youtube_id).all():
+        return
     p = subprocess.Popen(
         ["youtube-dl", url, '-x', '--audio-format', 'vorbis', '--id'],
         cwd='./media/'
@@ -31,7 +33,7 @@ def transcode(url):
     p.wait()
     title = get_title(url)
 
-    task = SongItem(songname=title, youtube_id=id_)
+    task = SongItem(songname=title.strip(), youtube_id=id_.strip())
     Task_DBSession.add(task)
     transaction.commit()
 
