@@ -1,5 +1,7 @@
 from urlparse import urlparse
 from urlparse import parse_qs
+import logging
+import socket
 
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
@@ -8,6 +10,9 @@ from yodl.tasks import transcode
 from yodl.models import SongItem
 from yodl.models import DBSession
 from yodl.celery_utils import celery
+
+
+log = logging.getLogger(__name__)
 
 
 def url_validate(url):
@@ -30,12 +35,18 @@ def main_view(request):
         if url_validate(url):
             r = transcode.delay(url)
             request.session["error"] = False
+
         else:
             request.session["error"] = True
+
         return HTTPFound(request.route_url('home'))
 
     i = celery.control.inspect()
-    queue = i.active()
+    try:
+        queue = i.active()
+    except socket.error:
+        log.error("Could not connect to RabbitMQ server.")
+        raise
 
     songs = DBSession.query(SongItem).all()
     return {'songs': songs, 'queue': queue}
