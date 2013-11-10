@@ -21,6 +21,5 @@ Run the MQ server:
 rabbitmq-server -detached
 
 Run the worker:
-cd yodl
-mkdir media
-celery -A tasks worker --loglevel=INFO &
+mkdir yodl/media
+celery -A yodl.tasks worker --loglevel=INFO &
