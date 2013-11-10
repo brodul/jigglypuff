@@ -69,7 +69,7 @@
         <td>{{ song.id }}</td>
         <td>{{ song.songname }}</td>
         <td>
-        <a href="{{ request.static_url('yodl:media/') + song.youtube_id[:-1] }}.ogg">
+        <a href="{{ request.static_url('yodl:media/') + song.youtube_id }}.ogg">
         {{ request.static_url('yodl:media/') + song.youtube_id }}.ogg
         </a>
         </td>
