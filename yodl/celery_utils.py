@@ -8,10 +8,15 @@ from pyramid.paster import bootstrap
 from celery import Celery
 
 
-celery = Celery('proj.celery',
-                broker='amqp://',
-                backend='amqp://',
-                include=['yodl.tasks'])
+celery_config = lambda: None
+
+celery_config.CELERY_RESULT_DBURI = "sqlite:///file.db"
+celery_config.CELERY_RESULT_BACKEND = "database"
+celery_config.BROKER_URL = ""
+
+celery = Celery()
+celery.config_from_object(celery_config)
+
 
 # Optional configuration, see the application user guide.
 celery.conf.update(
@@ -20,5 +25,3 @@ celery.conf.update(
 
 if __name__ == '__main__':
     celery.start()
-
-#celery.config_from_object('celeryconfig')
