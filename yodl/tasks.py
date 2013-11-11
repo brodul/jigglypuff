@@ -32,6 +32,8 @@ def transcode(url):
     )
     p.wait()
     title = get_title(url)
+    if p.returncode:
+        raise Exception
 
     task = SongItem(songname=title.strip().decode('utf8'), youtube_id=id_)
     Task_DBSession.add(task)
@@ -47,6 +49,8 @@ def get_title(url):
     p.wait()
     title, err = p.communicate()
     title = title.strip()
+    if p.returncode:
+        raise Exception
     return title
 
 
@@ -59,5 +63,7 @@ def get_id(url):
     )
     p.wait()
     id_, err = p.communicate()
+    if p.returncode:
+        raise Exception
 
     return id_.strip()
