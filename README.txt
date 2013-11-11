@@ -5,6 +5,10 @@ youtube-dl
 rabbitmq-server
 python-virtualenv
 
+You need this in /etc/rabbitmq/rabbitmq-env.conf:
+NODE_IP_ADDRESS='127.0.0.1'
+NODENAME='guest@localhost'
+
 Make a virtualenv in the root of the project:
 virtualenv --no-site-packages .
 
@@ -23,3 +27,4 @@ rabbitmq-server -detached
 Run the worker:
 mkdir yodl/media
 celery -A yodl.tasks worker --loglevel=INFO &
+
