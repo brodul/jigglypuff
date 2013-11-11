@@ -33,7 +33,7 @@ def transcode(url):
     p.wait()
     title = get_title(url)
 
-    task = SongItem(songname=title.strip(), youtube_id=id_)
+    task = SongItem(songname=title.strip().decode('utf8'), youtube_id=id_)
     Task_DBSession.add(task)
     transaction.commit()
 
