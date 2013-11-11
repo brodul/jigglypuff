@@ -13,7 +13,8 @@ requires = [
     'waitress',
     'sqlalchemy',
     'celery',
-    'zope.sqlalchemy'
+    'zope.sqlalchemy',
+    'mock'
     ]
 
 setup(name='yodl',
