@@ -1,19 +1,12 @@
 import unittest
-import urllib2
 
 from mock import patch
 from pyramid import testing
 
-
-def is_internet_on():
-    try:
-        urllib2.urlopen('http://www.youtube.com', timeout=1)
-        return True
-    except urllib2.URLError:
-        pass
-    return False
-
-INTERNET = (is_internet_on(), "Can not access Youtube.com")
+from yodl.tests import (
+    INTRANET,
+    TRAVIS
+)
 
 
 class ViewTests(unittest.TestCase):
@@ -45,7 +38,8 @@ class TaskTests(unittest.TestCase):
             'id98765'
         )
 
-    #@unittest.skipUnless(*INTERNET)
+    @unittest.skipUnless(*INTERNET)
+    @unittest.skipUnless(*TRAVIS)
     def test_get_id_implement(self):
         from yodl.tasks import get_id
 
