@@ -38,6 +38,7 @@ class TaskTests(unittest.TestCase):
         from yodl.tasks import get_id
         mock_popen.return_value.communicate.return_value = \
             ('id98765', '')
+        mock_popen.return_value.returncode = 0
 
         self.assertEqual(
             get_id("http://www.youtube.com/watch?v=id98765"),
