@@ -4,7 +4,7 @@ from mock import patch
 from pyramid import testing
 
 from yodl.tests import (
-    INTRANET,
+    INTERNET,
     TRAVIS
 )
 
@@ -39,7 +39,7 @@ class TaskTests(unittest.TestCase):
         )
 
     @unittest.skipUnless(*INTERNET)
-    @unittest.skipUnless(*TRAVIS)
+    @unittest.skipIf(*TRAVIS)
     def test_get_id_implement(self):
         from yodl.tasks import get_id
 
