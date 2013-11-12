@@ -33,7 +33,7 @@ def main_view(request):
         url = request.params["url"].strip()
         # check if id and file all ready exists
         if url_validate(url):
-            r = transcode.delay(url)
+            transcode.delay(url)
             request.session["error"] = False
 
         else:

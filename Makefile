@@ -24,7 +24,7 @@ clean-pyc:
 	find . -name '*~' -exec rm -f {} +
 
 lint:
-	flake8 yodl tests
+	flake8 yodl
 
 test:
 	python setup.py test

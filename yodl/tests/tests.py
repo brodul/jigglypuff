@@ -10,6 +10,7 @@ from yodl.tests import (
 )
 
 
+ #TODO XXX
 class ViewTests(unittest.TestCase):
 
     def setUp(self):
@@ -23,6 +24,7 @@ class ViewTests(unittest.TestCase):
         from .views import main_view
         request = testing.DummyRequest()
         info = main_view(request)
+        del info
 
 
 class TaskTests(unittest.TestCase):
