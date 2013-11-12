@@ -17,7 +17,7 @@ class ViewTests(unittest2.TestCase):
     def tearDown(self):
         testing.tearDown()
 
-    def test_my_view(self):
+    def test_my_view(self):  # pragma: no cover
         return
         from .views import main_view
         request = testing.DummyRequest()
