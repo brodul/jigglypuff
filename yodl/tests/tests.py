@@ -1,5 +1,3 @@
-import unittest
-
 from mock import patch
 import unittest2
 from pyramid import testing
@@ -11,7 +9,7 @@ from yodl.tests import (
 
 
  #TODO XXX
-class ViewTests(unittest.TestCase):
+class ViewTests(unittest2.TestCase):
 
     def setUp(self):
         self.config = testing.setUp()
@@ -27,7 +25,7 @@ class ViewTests(unittest.TestCase):
         del info
 
 
-class TaskTests(unittest.TestCase):
+class TaskTests(unittest2.TestCase):
 
     @patch('subprocess.Popen')
     def test_get_id(self, mock_popen):
