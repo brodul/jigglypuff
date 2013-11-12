@@ -1,9 +1,0 @@
-pyramid
-pyramid_jinja2
-pyramid_debugtoolbar
-waitress
-sqlalchemy
-celery
-zope.sqlalchemy
-mock
-nose
