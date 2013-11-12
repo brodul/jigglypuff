@@ -1,6 +1,7 @@
 import unittest
 
 from mock import patch
+import unittest2
 from pyramid import testing
 
 from yodl.tests import (
@@ -38,8 +39,8 @@ class TaskTests(unittest.TestCase):
             'id98765'
         )
 
-    @unittest.skipUnless(*INTERNET)
-    @unittest.skipIf(*TRAVIS)
+    @unittest2.skipUnless(*INTERNET)
+    @unittest2.skipIf(*TRAVIS)
     def test_get_id_implement(self):
         from yodl.tasks import get_id
 

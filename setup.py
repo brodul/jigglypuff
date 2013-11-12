@@ -33,7 +33,8 @@ requires = [
     'celery',
     'zope.sqlalchemy',
     'mock',
-    'nose'
+    'nose',
+    'unittest2'
 ]
 
 setup(name='yodl',
