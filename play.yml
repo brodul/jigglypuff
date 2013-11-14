@@ -33,4 +33,4 @@
   tasks:
 
     - shell: "mv {{ project_dir }}/current/supervisor/yodl.conf /etc/supervisor.d/yodl.conf || :"
-    - supervisorictl: name=yodl state=restarted
+    - supervisorctl: name=yodl state=restarted
