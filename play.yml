@@ -1,0 +1,36 @@
+---
+- name: test play as root
+  hosts: all
+  sudo: yes
+  tasks:
+    - yum: name=python-virtualenv state=latest
+    - yum: name=rabbitmq-server state=latest
+    - yum: name=youtube-dl state=latest
+    - yum: name=ffmpeg state=latest
+    - yum: name=python-pip state=latest
+
+    - service: name=rabbitmq-server state=started
+
+    - user: name=yodl
+
+- name: test play as project user
+  hosts: all
+  sudo: yes
+  sudo_user: yodl
+  vars: 
+    project_dir: /home/yodl
+  tasks:
+    - command: date +%d-%m-%y--%H-%M
+      register: datetime
+    - file: name=previous state=absent
+    - git: repo=https://github.com/brodul/yodl.git dest={{ project_dir }}/{{ datetime.stdout }}
+    - shell: "mv {{ project_dir }}/current {{ project_dir }}/previous || :"
+    - file: state=link src={{ project_dir }}/{{ datetime.stdout }} dest={{ project_dir }}/current
+    
+- name: test play as root
+  hosts: all
+  sudo: yes
+  tasks:
+
+    - shell: "mv {{ project_dir }}/current/supervisor/yodl.conf /etc/supervisor.d/yodl.conf || :"
+    - supervisorictl: name=yodl state=restarted
