@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Document</title>
+  <title>Yodl</title>
   <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet">
   <style>
   
@@ -67,7 +67,7 @@
       {% for song in songs %}
       <tr>
         <td>{{ song.id }}</td>
-        <td>{{ song.songname }}</td>
+        <td>{{ song.songname | safe}}</td>
         <td>
         <a href="{{ request.static_url('yodl:media/') + song.youtube_id }}.ogg">
         {{ request.static_url('yodl:media/') + song.youtube_id }}.ogg
