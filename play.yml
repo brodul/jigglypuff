@@ -36,4 +36,5 @@
   tasks:
 
     - shell: "mv {{ project_dir }}/current/supervisor/yodl.conf /etc/supervisor.d/yodl.conf || :"
-    - supervisorctl: name="yodl:" state=started
+    - supervisorctl: name="yodl:yodl-pyramid" state=restarted
+    - supervisorctl: name="yodl:yodl-worker" state=restarted
