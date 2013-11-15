@@ -26,11 +26,14 @@
     - git: repo=https://github.com/brodul/yodl.git dest={{ project_dir }}/{{ datetime.stdout }}
     - shell: "mv {{ project_dir }}/current {{ project_dir }}/previous || :"
     - file: state=link src={{ project_dir }}/{{ datetime.stdout }} dest={{ project_dir }}/current
+    - pip: chdir={{ project_dir }}/current name=. virtualenv=.
     
 - name: test play as root
   hosts: all
   sudo: yes
+  vars: 
+    project_dir: /home/yodl
   tasks:
 
     - shell: "mv {{ project_dir }}/current/supervisor/yodl.conf /etc/supervisor.d/yodl.conf || :"
-    - supervisorctl: name=yodl state=restarted
+    - supervisorctl: name="yodl:" state=started
