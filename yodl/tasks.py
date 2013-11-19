@@ -15,7 +15,7 @@ from yodl.models import SongItem
 Task_DBSession = scoped_session(
     sessionmaker(extension=ZopeTransactionExtension())
 )
-engine = create_engine('sqlite:///file.db')
+engine = create_engine('sqlite:///../file.db')
 Task_DBSession.configure(bind=engine)
 
 
@@ -28,7 +28,7 @@ def transcode(url):
         return
     p = subprocess.Popen(
         ["youtube-dl", url, '-x', '--audio-format', 'vorbis', '--id'],
-        cwd='yodl/media/'
+        cwd='../media'
     )
     p.wait()
     title = get_title(url)

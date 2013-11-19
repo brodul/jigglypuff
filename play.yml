@@ -27,7 +27,7 @@
     - shell: "mv {{ project_dir }}/current {{ project_dir }}/previous || :"
     - file: state=link src={{ project_dir }}/{{ datetime.stdout }} dest={{ project_dir }}/current
     - pip: chdir={{ project_dir }}/current name=. virtualenv=.
-    - file: path={{ project_dir }}/current/yodl/media state=directory
+    - file: path={{ project_dir }}/media state=directory
     
 - name: test play as root
   hosts: all
