@@ -43,10 +43,11 @@ def main_view(request):
 
     i = celery.control.inspect()
     try:
-        queue = i.active()
+        active = i.active()
+        queue = i.scheduled()
     except socket.error:
         log.error("Could not connect to RabbitMQ server.")
         raise
 
     songs = DBSession.query(SongItem).all()
-    return {'songs': songs, 'queue': queue}
+    return {'songs': songs, 'queue': queue, 'active': active}

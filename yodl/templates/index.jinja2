@@ -57,6 +57,24 @@
       {% endif %}
     </table>
     <hr />
+    <h3>Active:</h3>
+      <table class="table table-striped">
+      <tr>
+        <th>Worker</th>
+        <th>Song name</th>
+      </tr>
+      {% if active%}
+      {% for worker, tasks in active.iteritems() %}
+      {% for task in tasks %}
+      <tr>
+        <td>{{ worker }}</td>
+        <td>{{ task['args'] }}</td>
+      </tr>
+      {% endfor %}
+      {% endfor %}
+      {% endif %}
+    </table>
+    <hr />
     <h3>Finished:</h3>
     <table class="table table-striped">
       <tr>
