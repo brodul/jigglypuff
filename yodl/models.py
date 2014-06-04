@@ -22,4 +22,5 @@ class SongItem(Base):
     __tablename__ = 'songs'
     id = Column(Integer, primary_key=True)
     songname = Column(Unicode, unique=True)
+    file_id = Column(Text, unique=True)
     youtube_id = Column(Text, unique=True)

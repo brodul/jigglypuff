@@ -1,12 +1,15 @@
-import subprocess
+import hashlib
+import os
+import json
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import (
     scoped_session,
     sessionmaker,
 )
-import transaction
 from zope.sqlalchemy import ZopeTransactionExtension
+from youtube_dl import _real_main as call_youtube_dl
+import transaction
 
 from yodl.celery_utils import celery
 from yodl.models import SongItem
@@ -20,50 +23,47 @@ Task_DBSession.configure(bind=engine)
 
 
 @celery.task
-def transcode(url, media_path):
+def transcode(url, media_path, audio_format=None):
     """docstring for dl_transcode"""
-    id_ = get_id(url)
+    audio_format = audio_format or 'vorbis'
+    user_agent = 'Mozilla/5.0 (Windows; Windows NT 6.1) AppleWebKit/534.57.2\
+ (KHTML, like Gecko) Version/5.1.7 Safari/534.57.2'
 
-    if (id_, ) in Task_DBSession.query(SongItem.youtube_id).all():
+    file_id = hashlib.md5(url).hexdigest()
+    raw_file = os.path.join(media_path, file_id)
+    args = [
+        '-k',
+        '--extract-audio',
+        '--audio-format', audio_format,
+        '--audio-quality', '0',
+        '--user-agent', user_agent,
+        '--no-progress',
+        '--write-info-json',
+
+        '--output', raw_file + '.%(ext)s',
+
+        url
+    ]
+
+    if (file_id, ) in Task_DBSession.query(SongItem.file_id).all():
         return
-    p = subprocess.Popen(
-        ["youtube-dl", url, '-x', '--audio-format', 'vorbis', '--id'],
-        cwd=media_path
-    )
-    p.wait()
-    title = get_title(url)
-    if p.returncode:
-        raise Exception
 
-    task = SongItem(songname=title.strip().decode('utf8'), youtube_id=id_)
+    try:
+        call_youtube_dl(args)
+    except SystemExit as e:
+        if not e.code is None:
+            raise
+
+
+    with open('%s.info.json' % raw_file) as f:
+        parsed_json = json.load(f)
+
+    task = SongItem(
+        songname=parsed_json['title'],
+        youtube_id=parsed_json['id'],
+        file_id=file_id
+    )
     Task_DBSession.add(task)
     transaction.commit()
 
-    return p.returncode, id_, title
-
-
-@celery.task
-def get_title(url):
-    """docstring for dl_get_title"""
-    p = subprocess.Popen(["youtube-dl", url, '-e'], stdout=subprocess.PIPE)
-    p.wait()
-    title, err = p.communicate()
-    title = title.strip()
-    if p.returncode:
-        raise Exception
-    return title
-
-
-@celery.task
-def get_id(url):
-    """docstring for get_id"""
-    p = subprocess.Popen(
-        ["youtube-dl", url, '--get-id'],
-        stdout=subprocess.PIPE,
-    )
-    p.wait()
-    id_, err = p.communicate()
-    if p.returncode:
-        raise Exception
-
-    return id_.strip()
+    return file_id
