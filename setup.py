@@ -34,7 +34,8 @@ requires = [
     'zope.sqlalchemy',
     'mock',
     'nose',
-    'unittest2'
+    'unittest2',
+    'youtube-dl',
 ]
 
 setup(name='yodl',
