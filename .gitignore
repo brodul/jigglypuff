@@ -40,3 +40,6 @@ nosetests.xml
 
 /share/
 /inventory
+
+# Contains secrets
+/production.ini
