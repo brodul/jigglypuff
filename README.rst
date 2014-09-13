@@ -1,4 +1,7 @@
-This is pre-alfa. :D
+This is alfa. :D
+
+Demo can be found here:
+`Brodul's yodl <http://yodl.brodul.org/>`_
 
 Make sure you have the packets::
 
