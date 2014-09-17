@@ -35,6 +35,7 @@ requires = [
     'mock',
     'nose',
     'unittest2',
+    'webtest',
     'youtube-dl',
 ]
 
