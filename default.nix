@@ -107,5 +107,5 @@ buildPythonPackage {
     ffmpeg
   ];
 
-  src = ".";
+  src = ./.;
 }
