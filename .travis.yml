@@ -9,7 +9,6 @@ install:
   - "pip install ."
 
 script:
-  - "flake8 $(find . -iname '*.py')"
   - "nosetests --with-coverage --cover-package=yodl"
 
 after_success:
