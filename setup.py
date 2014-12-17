@@ -30,7 +30,7 @@ requires = [
     'pyramid_debugtoolbar',
     'waitress',
     'sqlalchemy',
-    'celery==3.1.3',
+    'celery',
     'zope.sqlalchemy',
     'mock',
     'nose',
