@@ -15,6 +15,10 @@
       <h4>Simple way to download youtube songs.</h4>
     </div>
     
+    {% if not workers_available %}
+    <div class="alert alert-warning" role="alert">All workers down!</div>
+    {% endif %}
+
     {% if not request.session["error"] %}
     <form action="" method="post" class="form">
       <div class="form-group">

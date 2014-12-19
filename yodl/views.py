@@ -43,9 +43,9 @@ def main_view(request):
             request.session["error"] = True
 
         return HTTPFound(request.route_url('home'))
-
-    i = celery.control.inspect()
+    i = celery.control.inspect(timeout=0.05)
     try:
+        wa = isinstance(i.stats(), dict)
         active = i.active()
         queue = i.scheduled()
     except socket.error:
@@ -53,4 +53,9 @@ def main_view(request):
         raise
 
     songs = DBSession.query(SongItem).all()
-    return {'songs': songs, 'queue': queue, 'active': active}
+    return {
+        'songs': songs,
+        'queue': queue,
+        'active': active,
+        'workers_available': wa,
+    }
