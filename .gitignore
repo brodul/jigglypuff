@@ -43,3 +43,6 @@ nosetests.xml
 
 # Contains secrets
 /production.ini
+
+# Nix stuff
+/result*
