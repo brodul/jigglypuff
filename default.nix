@@ -88,7 +88,7 @@ in
 buildPythonPackage {
   name = "yodl";
 
-  buildInputs = [ 
+  propagatedBuildInputs = [ 
     python
     virtualenv
     git
@@ -105,6 +105,7 @@ buildPythonPackage {
     webtest
     youtube_dl
     ffmpeg
+    gunicorn
   ];
 
   src = ./.;

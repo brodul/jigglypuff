@@ -60,5 +60,8 @@ setup(name='yodl',
           b'paste.app_factory': [
               'main = yodl:main',
           ],
+          'console_scripts': [
+              'yodlstart = yodl.scripts.gunicorn_wrapper:main',
+          ]
       },
       )
