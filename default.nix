@@ -106,6 +106,7 @@ buildPythonPackage {
     youtube_dl
     ffmpeg
     gunicorn
+    raven
   ];
 
   src = ./.;

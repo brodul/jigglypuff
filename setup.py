@@ -37,6 +37,7 @@ requires = [
     'unittest2',
     'webtest',
     'youtube-dl',
+    'raven'
 ]
 
 setup(name='yodl',
