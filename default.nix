@@ -3,6 +3,7 @@ with pkgs.python27Packages;
 
 let
 
+
   billiard = pythonPackages.buildPythonPackage rec {
     name = "billiard-3.3.0.19";
 
@@ -33,6 +34,22 @@ let
 
     meta = with stdenv.lib; {
       homepage = http://github.com/celery/py-amqp;
+    };
+  };
+
+  cornice = pythonPackages.buildPythonPackage rec {
+    name = "cornice-0.19.0";
+
+    src = fetchurl {
+      url = "https://pypi.python.org/packages/source/c/cornice/cornice-0.19.0.zip";
+      md5 = "b0f0eb49fe650e3f1411d0ecfc519ec2";
+    };
+
+    propagatedBuildInputs = with pythonPackages; [ pyramid simplejson ];
+
+    meta = with stdenv.lib; {
+      description = "Define Web Services in Pyramid.";
+      homepage = https://github.com/mozilla-services/cornice;
     };
   };
 
@@ -94,6 +111,7 @@ buildPythonPackage {
     git
     pyramid
     pyramid_jinja2
+    pyramid_tm
     pyramid_debugtoolbar
     waitress
     sqlalchemy
@@ -107,6 +125,7 @@ buildPythonPackage {
     ffmpeg
     gunicorn
     raven
+    cornice
   ];
 
   src = ./.;

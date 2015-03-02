@@ -27,6 +27,7 @@ def get_version(filename):
 requires = [
     'pyramid',
     'pyramid_jinja2',
+    'pyramid_tm',
     'pyramid_debugtoolbar',
     'waitress',
     'sqlalchemy',
@@ -37,7 +38,8 @@ requires = [
     'unittest2',
     'webtest',
     'youtube-dl',
-    'raven'
+    'raven',
+    'cornice',
 ]
 
 setup(name='jigglypuff',
