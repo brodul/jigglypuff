@@ -6,6 +6,7 @@ History
 0.0.2 (unreleased)
 ++++++++++++++++++
 
+* Rename from 'yodl' to 'jigglypuff'.
 * Added logic for 'jigglypuff.media_path' settings entry, file system path to the
   pre-created media folder, defaults to 'jigglypuff/media/', after changing this
   setting, database migration is in order or simply delete the file.db.
