@@ -11,8 +11,8 @@ from zope.sqlalchemy import ZopeTransactionExtension
 from youtube_dl import _real_main as call_youtube_dl
 import transaction
 
-from yodl.celery_utils import celery
-from yodl.models import SongItem
+from jigglypuff.celery_utils import celery
+from jigglypuff.models import SongItem
 
 
 Task_DBSession = scoped_session(

@@ -7,9 +7,9 @@ from pyramid import testing
 from sqlalchemy import engine_from_config
 from sqlalchemy.orm import sessionmaker
 
-from yodl.models import Base as Entity
-from yodl.models import DBSession as Session
-from yodl.tests import (
+from jigglypuff.models import Base as Entity
+from jigglypuff.models import DBSession as Session
+from jigglypuff.tests import (
     INTERNET,
     TRAVIS
 )
@@ -90,11 +90,11 @@ class TasksTests(unittest2.TestCase):
         m = mock_open(read_data=f.read())
 
     @patch('__builtin__.open', m, create=True)
-    @patch('yodl.tasks.add_song_to_db')
-    @patch('yodl.tasks.check_song_existence')
+    @patch('jigglypuff.tasks.add_song_to_db')
+    @patch('jigglypuff.tasks.check_song_existence')
     @patch('youtube_dl._real_main')
     def test_transcode(self, mock_main, mock_check_song, mock_add_song):
-        from yodl.tasks import transcode
+        from jigglypuff.tasks import transcode
 
         self.assertEqual(
             transcode("http://www.youtube.com/watch?v=id98765", '.'),

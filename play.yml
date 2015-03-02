@@ -11,31 +11,31 @@
 
     - service: name=rabbitmq-server state=started
 
-    - user: name=yodl
+    - user: name=jigglypuff
 
 - name: test play as project user
   hosts: all
   sudo: yes
-  sudo_user: yodl
+  sudo_user: jigglypuff
   vars: 
-    project_dir: /home/yodl
+    project_dir: /home/jigglypuff
   tasks:
     - command: date +%d-%m-%y--%H-%M
       register: datetime
     - file: name=previous state=absent
-    - git: repo=https://github.com/brodul/yodl.git dest={{ project_dir }}/{{ datetime.stdout }}
+    - git: repo=https://github.com/brodul/jigglypuff.git dest={{ project_dir }}/{{ datetime.stdout }}
     - shell: "mv {{ project_dir }}/current {{ project_dir }}/previous || :"
     - file: state=link src={{ project_dir }}/{{ datetime.stdout }} dest={{ project_dir }}/current
     - pip: chdir={{ project_dir }}/current name=. virtualenv=.
-    - file: path={{ project_dir }}/current/yodl/media state=directory
+    - file: path={{ project_dir }}/current/jigglypuff/media state=directory
     
 - name: test play as root
   hosts: all
   sudo: yes
   vars: 
-    project_dir: /home/yodl
+    project_dir: /home/jigglypuff
   tasks:
 
-    - shell: "mv {{ project_dir }}/current/supervisor/yodl.conf /etc/supervisor.d/yodl.conf || :"
-    - supervisorctl: name="yodl:yodl-pyramid" state=restarted
-    - supervisorctl: name="yodl:yodl-worker" state=restarted
+    - shell: "mv {{ project_dir }}/current/supervisor/jigglypuff.conf /etc/supervisor.d/jigglypuff.conf || :"
+    - supervisorctl: name="jigglypuff:jigglypuff-pyramid" state=restarted
+    - supervisorctl: name="jigglypuff:jigglypuff-worker" state=restarted

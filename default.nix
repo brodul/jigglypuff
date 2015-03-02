@@ -86,7 +86,7 @@ let
 in
 
 buildPythonPackage {
-  name = "yodl";
+  name = "jigglypuff";
 
   propagatedBuildInputs = [ 
     python

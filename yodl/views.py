@@ -6,10 +6,10 @@ import socket
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 
-from yodl.tasks import transcode
-from yodl.models import SongItem
-from yodl.models import DBSession
-from yodl.celery_utils import celery
+from jigglypuff.tasks import transcode
+from jigglypuff.models import SongItem
+from jigglypuff.models import DBSession
+from jigglypuff.celery_utils import celery
 
 
 log = logging.getLogger(__name__)
@@ -35,7 +35,7 @@ def main_view(request):
         if url_validate(url):
             transcode.delay(
                 url,
-                media_path=request.registry.settings['yodl.media_path']
+                media_path=request.registry.settings['jigglypuff.media_path']
             )
             request.session["error"] = False
 

@@ -40,9 +40,9 @@ requires = [
     'raven'
 ]
 
-setup(name='yodl',
-      version=get_version('yodl/__init__.py'),
-      description='yodl',
+setup(name='jigglypuff',
+      version=get_version('jigglypuff/__init__.py'),
+      description='jigglypuff',
       long_description=readme + '\n\n' + history,
       classifiers=[
           "Programming Language :: Python",
@@ -59,10 +59,10 @@ setup(name='yodl',
       test_suite='nose.collector',
       entry_points={
           b'paste.app_factory': [
-              'main = yodl:main',
+              'main = jigglypuff:main',
           ],
           'console_scripts': [
-              'yodlstart = yodl.scripts.gunicorn_wrapper:main',
+              'jigglypuffstart = jigglypuff.scripts.gunicorn_wrapper:main',
           ]
       },
       )

@@ -1,7 +1,7 @@
 This is alfa. :D
 
 Demo can be found here:
-`Brodul's yodl <http://yodl.brodul.org/>`_
+`Brodul's jigglypuff <http://jigglypuff.brodul.org/>`_
 
 Make sure you have the packets::
 
@@ -44,5 +44,5 @@ Run the MQ server::
 
 Run the worker::
 
-    mkdir yodl/media
-    celery -A yodl.tasks worker --loglevel=INFO &
+    mkdir jigglypuff/media
+    celery -A jigglypuff.tasks worker --loglevel=INFO &
