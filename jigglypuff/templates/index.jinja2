@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <title>Yodl</title>
   <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet">
+<script src="//cdnjs.cloudflare.com/ajax/libs/react/0.13.1/JSXTransformer.js"  ></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/react/0.13.1/react.js"  ></script>
+
+
   <style>
   
   </style>
@@ -11,93 +15,243 @@
 <body>
   <div class="container">
     <div class="text-center">
-      <h1>Brodul's youtube downloader</h1>
+      <h1>Jigglypuff</h1>
       <h4>Simple way to download youtube songs.</h4>
     </div>
+
+    <div id="content"></div>
     
-    {% if not workers_available %}
-    <div class="alert alert-warning" role="alert">All workers down!</div>
-    {% endif %}
+<script type="text/jsx">
 
-    {% if not request.session["error"] %}
-    <form action="" method="post" class="form">
-      <div class="form-group">
-        <label for="">Youtube URL:</label>
-        <input name="url" type="text" class="form-control" /></div>
-    <button type="submit" class="btn">Submit</button>
-    </form>
+function ready(fn) {
+  if (document.readyState != 'loading'){
+    fn();
+  } else {
+    document.addEventListener('DOMContentLoaded', fn);
+  }
+  }
 
-    {% else %}
-    <form action="" method="post" class="form">
-    <div class="form-group has-error">
-    <label class="control-label" for="inputError">Youtube URL:</label>
-    <input name="url" type="text" class="form-control" id="inputError" />
-    <span class="help-block">
-      Please provide the URL in the following format:
-      http://www.youtube.com/watch?v=wiyYozeOoKs
-    </span>
-    <button type="submit" class="btn">Submit</button>
-    </div>
-    </form>
+ready(function () {
 
-    {% endif %}
 
-    <hr/>
-    <h3>Queue (to be processed):</h3>
-      <table class="table table-striped">
-      <tr>
-        <th>Worker</th>
-        <th>Song name</th>
-      </tr>
-      {% if queue%}
-      {% for worker, tasks in queue.iteritems() %}
-      {% for task in tasks %}
-      <tr>
-        <td>{{ worker }}</td>
-        <td>{{ task['args'] }}</td>
-      </tr>
-      {% endfor %}
-      {% endfor %}
-      {% endif %}
-    </table>
-    <hr />
-    <h3>Active:</h3>
-      <table class="table table-striped">
-      <tr>
-        <th>Worker</th>
-        <th>Song name</th>
-      </tr>
-      {% if active%}
-      {% for worker, tasks in active.iteritems() %}
-      {% for task in tasks %}
-      <tr>
-        <td>{{ worker }}</td>
-        <td>{{ task['args'] }}</td>
-      </tr>
-      {% endfor %}
-      {% endfor %}
-      {% endif %}
-    </table>
-    <hr />
-    <h3>Finished:</h3>
-    <table class="table table-striped">
-      <tr>
-        <th>ID</th>
-        <th>Song name</th>
-        <th>Link</th>
-      </tr>
-      {% for song in songs %}
-      <tr>
-        <td>{{ song.youtube_id }}</td>
-        <td>{{ song.songname | safe}}</td>
-        <td>
-        <a href="{{ request.static_url(request.registry.settings['jigglypuff.media_path']) + song.file_id }}.ogg">
-        {{ request.static_url(request.registry.settings['jigglypuff.media_path']) + song.file_id }}.ogg
-        </a>
-        </td>
-      </tr>
-      {% endfor %}
-    </table>
+  var get = function (url, success) {
+  
+    var request = new XMLHttpRequest();
+    request.open('GET', url, true);
+
+    request.onload = function() {
+      if (request.status >= 200 && request.status < 400) {
+        // Success!
+        var data = JSON.parse(request.responseText);
+        success(data);
+      } else {
+        // We reached our target server, but it returned an error
+
+      }
+    };
+
+    request.onerror = function() {
+      // There was a connection error of some sort
+    };
+
+    request.send();
+
+  };
+
+  var AddForm= React.createClass({
+    handleSubmit: function(e) {
+      e.preventDefault();
+      var url = React.findDOMNode(this.refs.url).value.trim();
+      if (!url) {
+        return;
+      }
+
+      var request = new XMLHttpRequest();
+      request.open('POST', '/trans', true);
+      request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+      data = JSON.stringify({"board": "main", "url": url});
+      request.send(data);
+
+      React.findDOMNode(this.refs.url).value = '';
+      return;
+    },
+    render: function() {
+      return (
+      <form action="" method="post" className="form" onSubmit={this.handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="">Youtube URL:</label>
+          <input name="url" type="text" ref="url" className="form-control" /></div>
+      <button type="submit" className="btn">Submit</button>
+      </form>
+      );
+    }
+  });
+
+  var SongRow= React.createClass({
+    render: function() {
+      var song_source = '/media/' + this.props.file_id;
+      return (
+          <tr>
+            <td>{this.props.youtube_id}</td>
+            <td>
+            <a href={song_source}>
+              {this.props.title} 
+            </a>
+            </td>
+            <td>
+             <audio controls>
+                <source src={song_source} type="audio/ogg"/>
+              Your browser does not support the audio element.
+              </audio> 
+            </td>
+          </tr>
+      );
+    }
+  });
+
+  var SongsTable= React.createClass({
+    getInitialState: function() {
+      return {songs: []};
+    },
+    loadSongsFromServer: function() {
+      get("/boards/1",
+          function(data) {
+            var songs_array = [];
+            for (var key in data.songs) {
+              if (data.songs.hasOwnProperty(key)) {
+               songs_array.push(data.songs[key]);
+              }
+            }
+            this.setState({songs: songs_array});
+          }.bind(this) 
+      );
+    },
+    componentDidMount: function() {
+      this.loadSongsFromServer();
+      setInterval(this.loadSongsFromServer, this.props.pollInterval);
+    },
+    render: function() {
+      var songsNodes= this.state.songs.map(function (song) {
+        return (
+          <SongRow title={song.title} youtube_id={song.youtube_id} file_id={song.file_id} />
+        );
+      });
+      return (
+        <table className="table table-striped">
+          <tr>
+            <th>ID</th>
+            <th>Song title</th>
+            <th>Player</th>
+          </tr>
+          {songsNodes}
+        </table>
+      );
+    }
+  });
+
+var Content = React.createClass({
+  render: function() {
+    return (
+      <div>
+        <AddForm/>
+        <SongsTable pollInterval={5000}/>
+      </div>
+    );
+  }
+});
+
+React.render(
+  <Content />,
+  document.getElementById('content')
+);
+
+});
+
+
+</script>
+    <!--{% if not workers_available %}-->
+    <!--<div class="alert alert-warning" role="alert">All workers down!</div>-->
+    <!--{% endif %}-->
+
+    <!--{% if not request.session["error"] %}-->
+    <!--<form action="" method="post" class="form">-->
+      <!--<div class="form-group">-->
+        <!--<label for="">Youtube URL:</label>-->
+        <!--<input name="url" type="text" class="form-control" /></div>-->
+    <!--<button type="submit" class="btn">Submit</button>-->
+    <!--</form>-->
+
+    <!--{% else %}-->
+    <!--<form action="" method="post" class="form">-->
+    <!--<div class="form-group has-error">-->
+    <!--<label class="control-label" for="inputError">Youtube URL:</label>-->
+    <!--<input name="url" type="text" class="form-control" id="inputError" />-->
+    <!--<span class="help-block">-->
+      <!--Please provide the URL in the following format:-->
+      <!--http://www.youtube.com/watch?v=wiyYozeOoKs-->
+    <!--</span>-->
+    <!--<button type="submit" class="btn">Submit</button>-->
+    <!--</div>-->
+    <!--</form>-->
+
+    <!--{% endif %}-->
+
+    <!--<hr/>-->
+    <!--<h3>Queue (to be processed):</h3>-->
+      <!--<table class="table table-striped">-->
+      <!--<tr>-->
+        <!--<th>Worker</th>-->
+        <!--<th>Song name</th>-->
+      <!--</tr>-->
+      <!--{% if queue%}-->
+      <!--{% for worker, tasks in queue.iteritems() %}-->
+      <!--{% for task in tasks %}-->
+      <!--<tr>-->
+        <!--<td>{{ worker }}</td>-->
+        <!--<td>{{ task['args'] }}</td>-->
+      <!--</tr>-->
+      <!--{% endfor %}-->
+      <!--{% endfor %}-->
+      <!--{% endif %}-->
+    <!--</table>-->
+    <!--<hr />-->
+    <!--<h3>Active:</h3>-->
+      <!--<table class="table table-striped">-->
+      <!--<tr>-->
+        <!--<th>Worker</th>-->
+        <!--<th>Song name</th>-->
+      <!--</tr>-->
+      <!--{% if active%}-->
+      <!--{% for worker, tasks in active.iteritems() %}-->
+      <!--{% for task in tasks %}-->
+      <!--<tr>-->
+        <!--<td>{{ worker }}</td>-->
+        <!--<td>{{ task['args'] }}</td>-->
+      <!--</tr>-->
+      <!--{% endfor %}-->
+      <!--{% endfor %}-->
+      <!--{% endif %}-->
+    <!--</table>-->
+    <!--<hr />-->
+    <!--<h3>Finished:</h3>-->
+    <!--<table class="table table-striped">-->
+      <!--<tr>-->
+        <!--<th>ID</th>-->
+        <!--<th>Song name</th>-->
+        <!--<th>Link</th>-->
+      <!--</tr>-->
+      <!--{% for song in songs %}-->
+      <!--<tr>-->
+        <!--<td>{{ song.youtube_id }}</td>-->
+        <!--<td>{{ song.songname | safe}}</td>-->
+        <!--<td>-->
+        <!--<a href="{{ request.static_url(request.registry.settings['jigglypuff.media_path']) + song.file_id }}.ogg">-->
+        <!--{{ request.static_url(request.registry.settings['jigglypuff.media_path']) + song.file_id }}.ogg-->
+        <!--</a>-->
+        <!--</td>-->
+      <!--</tr>-->
+      <!--{% endfor %}-->
+    <!--</table>-->
   </div>
 </body>
 </html>
