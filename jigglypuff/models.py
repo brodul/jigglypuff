@@ -43,6 +43,19 @@ class Board(Base):
         backref="boards"
     )
 
+    def get_dict(self):
+        """@todo: Docstring for get_dict
+
+        :returns: @todo
+
+        """
+
+        songs = {song.file_id: song.get_dict() for song in self.songs}
+        return {
+            'name': self.name,
+            'songs': songs,
+        }
+
 
 class Song(Base):
     __tablename__ = 'songs'
@@ -50,6 +63,22 @@ class Song(Base):
     youtube_id = Column(Text, unique=True)
 
     title = Column(Unicode, unique=False)
-    lenght = Column(Unicode, unique=False)
+    length = Column(Unicode, unique=False)
 
     file_id = Column(Text, unique=True)
+
+    status = Column(Unicode, unique=False)
+
+    def get_dict(self):
+        """@todo: Docstring for get_dict
+
+        :returns: @todo
+
+        """
+
+        return {
+            'file_id': self.file_id,
+            'title': self.title,
+            'length': self.length,
+            'youtube_id': self.youtube_id,
+        }

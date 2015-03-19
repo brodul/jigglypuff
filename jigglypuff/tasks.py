@@ -1,18 +1,20 @@
 import hashlib
 import os
 import json
+import os.path
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import (
     scoped_session,
     sessionmaker,
 )
+from sqlalchemy.orm.exc import NoResultFound
 from zope.sqlalchemy import ZopeTransactionExtension
-from youtube_dl import _real_main as call_youtube_dl
 import transaction
+import pafy
 
 from jigglypuff.celery_utils import celery
-from jigglypuff.models import SongItem
+from jigglypuff.models import Song
 
 
 Task_DBSession = scoped_session(
@@ -22,69 +24,104 @@ engine = create_engine('sqlite:///file.db')
 Task_DBSession.configure(bind=engine)
 
 
-def check_song_existence(file_id):
+def check_song_existence(youtube_id):
     """@todo: Docstring for check_song_existence.
 
     :file_id: @todo
     :returns: @todo
 
     """
-    if (file_id, ) in Task_DBSession.query(SongItem.file_id).all():
+    if (youtube_id, ) in Task_DBSession.query(Song.youtube_id).all():
         return False
     else:
         return True
 
+@celery.task
+def transcode2ogg(full_file_path):
+    """@todo: Docstring for transcode2ogg
 
-def add_song_to_db(file_id, parsed_json):
-    """@todo: Docstring for add_song_to_db.
-
-    :arg1: @todo
+    :file_id: @todo
     :returns: @todo
 
     """
-    task = SongItem(
-        songname=parsed_json['title'],
-        youtube_id=parsed_json['id'],
-        file_id=file_id
+    import os
+    import subprocess
+
+    ogg_file = full_file_path.split('.')[0] + '.ogg'
+    command = 'ffmpeg -y -i ' + \
+        full_file_path + \
+        ' -acodec libvorbis -aq 50 ' + \
+        ogg_file
+    p = subprocess.Popen(command, shell=True,
+        stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    output = p.communicate()[0]
+    return ogg_file
+
+
+@celery.task
+def check_song_db(po):
+    try:
+        song = Task_DBSession.query(Song).filter_by(youtube_id=po.videoid).one()
+    except NoResultFound:
+        return False
+    else:
+        if song.status == "STARTED":
+            print "Song in queue ..."
+        elif song.status == "COMPLETE":
+            print "Song already processed ..."
+        return True
+
+
+@celery.task
+def start_song_db(po):
+    task = Song(
+        youtube_id=po.videoid,
+        status='STARTED',
     )
     Task_DBSession.add(task)
     transaction.commit()
 
 
 @celery.task
-def transcode(url, media_path, audio_format=None, Task_DBSession=Task_DBSession):
+def complete_song_db(t):
+    """@todo: Docstring for add_song_to_db.
+
+    :arg1: @todo
+    :returns: @todo
+
+    """
+    po, file_id = t
+    Task_DBSession.query(Song).filter_by(youtube_id=po.videoid).update(dict(
+        title=po.title,
+        file_id=file_id,
+        length=po.length,
+        status='COMPLETE',
+    ))
+    transaction.commit()
+
+
+@celery.task
+def main_task(url, media_path, audio_format=None, Task_DBSession=Task_DBSession):
     """docstring for dl_transcode"""
-    audio_format = audio_format or 'vorbis'
-    user_agent = 'Mozilla/5.0 (Windows; Windows NT 6.1) AppleWebKit/534.57.2\
- (KHTML, like Gecko) Version/5.1.7 Safari/534.57.2'
 
-    file_id = hashlib.md5(url).hexdigest()
-    raw_file = os.path.join(media_path, file_id)
-    args = [
-        '-k',
-        '--extract-audio',
-        '--audio-format', audio_format,
-        '--audio-quality', '0',
-        '--user-agent', user_agent,
-        '--no-progress',
-        '--write-info-json',
+    pafy_object = pafy.new(url)
+    po = pafy_object
+    file_id = hashlib.md5(po.videoid).hexdigest()
 
-        '--output', raw_file + '.%(ext)s',
+    # XXX no perfect locking ... atomic bomb
+    if check_song_db(po):
+        return 0, ''
+    start_song_db(po)
 
-        url
-    ]
+    stream = po.getbestaudio()
 
-    check_song_existence(file_id)
+    file_name = file_id + '.' + stream.extension
+    full_file_path = os.path.join(media_path, file_name)
 
-    try:
-        call_youtube_dl(args)
-    except SystemExit as e:
-        if not e.code is None:
-            raise
+    r = stream.download(full_file_path)
 
-    with open('%s.info.json' % raw_file) as f:
-        parsed_json = json.load(f)
+    full_ogg_file = transcode2ogg(full_file_path)
+    ogg_file = os.path.basename(full_ogg_file)
+    complete_song_db.s((po, ogg_file))()
 
-    add_song_to_db(file_id, parsed_json)
-
-    return file_id
+    return 0, "Song added."

@@ -9,7 +9,7 @@ from pyramid.session import UnencryptedCookieSessionFactoryConfig
 from sqlalchemy import engine_from_config
 
 from jigglypuff.models import DBSession
-from jigglypuff.models import SongItem
+from jigglypuff.models import Base
 
 import os
 
@@ -31,7 +31,7 @@ def main(global_config, **settings):
         media_path if media_path[-1] == os.sep else media_path + os.sep
     settings['jigglypuff.media_path'] = media_path
 
-    SongItem.metadata.create_all(engine)
+    Base.metadata.create_all(engine)
     config = Configurator(
         settings=settings,
         session_factory=my_session_factory
