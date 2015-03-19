@@ -37,7 +37,6 @@ requires = [
     'nose',
     'unittest2',
     'webtest',
-    'youtube-dl',
     'raven',
     'cornice',
 ]

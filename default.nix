@@ -100,22 +100,6 @@ let
     };
   };
 
-  youtube_dl = pythonPackages.buildPythonPackage rec {
-    name = "youtube_dl-2014.12.16.2";
-
-    src = fetchurl {
-      url = "https://pypi.python.org/packages/source/y/youtube_dl/youtube_dl-2014.12.16.2.tar.gz";
-      md5 = "fe6c2e093c40dfb5ed5f7202609f44c6";
-    };
-
-    propagatedBuildInputs = with pythonPackages; [  ];
-
-    meta = with stdenv.lib; {
-      description = "Small command-line program to download videos from YouTube.com and other video sites.";
-      homepage = https://github.com/rg3/youtube-dl;
-    };
-  };
-
 in
 
 buildPythonPackage {
@@ -137,7 +121,6 @@ buildPythonPackage {
     nose
     unittest2
     webtest
-    youtube_dl
     ffmpeg
     gunicorn
     raven
