@@ -3,6 +3,22 @@ with pkgs.python27Packages;
 
 let
 
+  pafy = pythonPackages.buildPythonPackage rec {
+    name = "pafy-0.3.72";
+
+    src = fetchurl {
+      url = "https://pypi.python.org/packages/source/p/pafy/Pafy-0.3.72.tar.gz";
+      md5 = "f187d97432bf8a6ce2def245ab1b05a5";
+    };
+
+    propagatedBuildInputs = with pythonPackages; [  ];
+
+    meta = with stdenv.lib; {
+      description = ".. image:: http://badge.fury.io/py/Pafy.png";
+      homepage = http://np1.github.io/pafy/;
+      license = unknown;
+    };
+  };
 
   billiard = pythonPackages.buildPythonPackage rec {
     name = "billiard-3.3.0.19";
@@ -126,6 +142,7 @@ buildPythonPackage {
     gunicorn
     raven
     cornice
+    pafy
   ];
 
   src = ./.;
