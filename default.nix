@@ -129,4 +129,5 @@ buildPythonPackage {
   ];
 
   src = ./.;
+  doCheck = false;
 }
