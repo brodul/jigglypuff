@@ -64,6 +64,7 @@ setup(name='jigglypuff',
           ],
           'console_scripts': [
               'jigglypuffstart = jigglypuff.scripts.gunicorn_wrapper:main',
+              'celery = celery.__main__:main',
           ]
       },
       )
