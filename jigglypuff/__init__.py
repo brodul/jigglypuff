@@ -30,7 +30,7 @@ def main(global_config, **settings):
     # set the default for entry jigglypuff.media_path
     media_path = settings.get(
         'jigglypuff.media_path',
-        os.path.abspath('jigglypuff/media/')
+        os.path.join(__here__, '../media')
     )
     # add os seperator to end
     media_path = \
