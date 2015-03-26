@@ -87,9 +87,24 @@ ready(function () {
     }
   });
 
+  var SongPlayer = React.createClass({
+    render: function() {
+      return (
+        <audio controls>
+        <source src={this.props.song_source} type="audio/ogg"/>
+        Your browser does not support the audio element.
+          </audio> 
+      );
+    },
+  });
+
+
   var SongRow= React.createClass({
     render: function() {
       var song_source = '/media/' + this.props.file_id;
+      if (this.props.file_id) {
+        var song_player = <SongPlayer song_source={song_source} /> ;
+      }
       return (
           <tr>
             <td>{this.props.youtube_id}</td>
@@ -99,10 +114,7 @@ ready(function () {
             </a>
             </td>
             <td>
-             <audio controls>
-                <source src={song_source} type="audio/ogg"/>
-              Your browser does not support the audio element.
-              </audio> 
+              {song_player}
             </td>
           </tr>
       );
