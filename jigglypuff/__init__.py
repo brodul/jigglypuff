@@ -3,6 +3,7 @@
 
 __version__ = '0.0.1'
 
+from logging import getLogger
 
 from pyramid.config import Configurator
 from pyramid.session import UnencryptedCookieSessionFactoryConfig
@@ -12,6 +13,10 @@ from jigglypuff.models import DBSession
 from jigglypuff.models import Base
 
 import os
+
+
+__here__ = os.path.dirname(os.path.realpath(__file__))
+logger = getLogger(__file__)
 
 
 def main(global_config, **settings):
@@ -27,8 +32,15 @@ def main(global_config, **settings):
         'jigglypuff.media_path',
         os.path.abspath('jigglypuff/media/')
     )
+    # add os seperator to end
     media_path = \
         media_path if media_path[-1] == os.sep else media_path + os.sep
+    try:
+        os.mkdir(media_path)
+    except OSError as e:
+        logger.info("Media directory already exist.")
+        logger.debug("Exception:", exc_info=True)
+
     settings['jigglypuff.media_path'] = media_path
 
     Base.metadata.create_all(engine)
