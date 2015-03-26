@@ -47,7 +47,7 @@ def transcode2ogg(full_file_path):
     import os
     import subprocess
 
-    ogg_file = full_file_path.split('.')[0] + '.ogg'
+    ogg_file = os.path.splitext(full_file_path)[0] + '.ogg'
     command = 'ffmpeg -y -i ' + \
         full_file_path + \
         ' -acodec libvorbis -aq 50 ' + \
