@@ -1,6 +1,5 @@
 import hashlib
 import os
-import json
 import os.path
 
 from sqlalchemy import create_engine
@@ -36,6 +35,7 @@ def check_song_existence(youtube_id):
     else:
         return True
 
+
 @celery.task
 def transcode2ogg(full_file_path):
     """@todo: Docstring for transcode2ogg
@@ -52,16 +52,21 @@ def transcode2ogg(full_file_path):
         full_file_path + \
         ' -acodec libvorbis -aq 50 ' + \
         ogg_file
-    p = subprocess.Popen(command, shell=True,
-        stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    output = p.communicate()[0]
+    p = subprocess.Popen(
+        command,
+        shell=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT
+        )
+    p.communicate()[0]
     return ogg_file
 
 
 @celery.task
 def check_song_db(po):
     try:
-        song = Task_DBSession.query(Song).filter_by(youtube_id=po.videoid).one()
+        song = Task_DBSession.query(Song)\
+            .filter_by(youtube_id=po.videoid).one()
     except NoResultFound:
         return False
     else:
@@ -118,7 +123,7 @@ def main_task(url, media_path, audio_format=None, Task_DBSession=Task_DBSession)
     file_name = file_id + '.' + stream.extension
     full_file_path = os.path.join(media_path, file_name)
 
-    r = stream.download(full_file_path)
+    stream.download(full_file_path)
 
     full_ogg_file = transcode2ogg(full_file_path)
     ogg_file = os.path.basename(full_ogg_file)
