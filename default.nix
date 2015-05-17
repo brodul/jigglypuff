@@ -126,6 +126,7 @@ buildPythonPackage {
     raven
     cornice
     pafy
+    alembic
   ];
 
   src = ./.;
