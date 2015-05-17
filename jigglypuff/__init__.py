@@ -43,7 +43,9 @@ def main(global_config, **settings):
 
     settings['jigglypuff.media_path'] = media_path
 
-    Base.metadata.create_all(engine)
+    # DB creation should be handled by alembic
+    # Base.metadata.create_all(engine)
+
     config = Configurator(
         settings=settings,
         session_factory=my_session_factory

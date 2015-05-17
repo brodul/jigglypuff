@@ -2,20 +2,28 @@ from __future__ import with_statement
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 from logging.config import fileConfig
+from pyramid.paster import get_appsettings
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
 
+# get pyramid values
+pyramid_config_file = config.get_main_option('pyramid_config_file')
+pyramid_settings = get_appsettings(pyramid_config_file + '#main')
+
+
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
-fileConfig(config.config_file_name)
+fileConfig(pyramid_config_file)
+
+# get the sqla URL from the pyramid config file
+
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-# from myapp import mymodel
-# target_metadata = mymodel.Base.metadata
-target_metadata = None
+from jigglypuff.models import Base
+target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
@@ -34,7 +42,7 @@ def run_migrations_offline():
     script output.
 
     """
-    url = config.get_main_option("sqlalchemy.url")
+    url = pyramid_settings.get("sqlalchemy.url")
     context.configure(url=url, target_metadata=target_metadata)
 
     with context.begin_transaction():
@@ -48,7 +56,7 @@ def run_migrations_online():
 
     """
     engine = engine_from_config(
-                config.get_section(config.config_ini_section),
+                pyramid_settings,
                 prefix='sqlalchemy.',
                 poolclass=pool.NullPool)
 
