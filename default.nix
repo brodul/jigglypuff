@@ -127,6 +127,7 @@ buildPythonPackage {
     cornice
     pafy
     alembic
+    robotframework
   ];
 
   src = ./.;

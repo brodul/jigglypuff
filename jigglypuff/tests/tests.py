@@ -82,21 +82,3 @@ class ViewTests(unittest2.TestCase):
         request = testing.DummyRequest()
         info = main_view(request)
         del info
-
-
-class TasksTests(unittest2.TestCase):
-    from mock import mock_open
-    with open(os.path.join(__here__, "fixtures/json/test.info.json")) as f:
-        m = mock_open(read_data=f.read())
-
-    @patch('__builtin__.open', m, create=True)
-    @patch('jigglypuff.tasks.add_song_to_db')
-    @patch('jigglypuff.tasks.check_song_existence')
-    @patch('youtube_dl._real_main')
-    def test_transcode(self, mock_main, mock_check_song, mock_add_song):
-        from jigglypuff.tasks import transcode
-
-        self.assertEqual(
-            transcode("http://www.youtube.com/watch?v=id98765", '.'),
-            'f8213f97babd3a452d8196b539cf65f2'
-        )
