@@ -128,6 +128,7 @@ buildPythonPackage {
     pafy
     alembic
     robotframework
+    coverage
   ];
 
   src = ./.;

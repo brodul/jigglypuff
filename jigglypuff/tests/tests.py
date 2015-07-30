@@ -22,7 +22,7 @@ class FunctionalTestCase(unittest2.TestCase):
     @classmethod
     def setUpClass(cls):
         # http://www.sontek.net/blog/2011/12/01/writing_tests_for_pyramid_and_sqlalchemy.html
-        import meta_admin
+        import jigglypuff
         import tempfile
         import os.path
         cls.tmpdir = tempfile.mkdtemp()
@@ -37,7 +37,7 @@ class FunctionalTestCase(unittest2.TestCase):
 
         cls.Session = sessionmaker()
 
-        cls.app = meta_admin.main({}, **settings)
+        cls.app = jigglypuff.main({}, **settings)
 
     @classmethod
     def tearDownClass(cls):
@@ -82,3 +82,10 @@ class ViewTests(unittest2.TestCase):
         request = testing.DummyRequest()
         info = main_view(request)
         del info
+
+
+class BoardTests(FunctionalTestCase):
+
+    def test_title(self):
+        resp = self.testapp.get('/')
+        self.assertIn(u'<title>Jigglypuff</title>', resp.text)
