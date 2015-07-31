@@ -50,7 +50,7 @@ class Board(Base):
 
         """
 
-        songs = {song.file_id: song.get_dict() for song in self.songs}
+        songs = dict((song.file_id, song.get_dict()) for song in self.songs)
         return {
             'name': self.name,
             'songs': songs,
