@@ -40,6 +40,7 @@ requires = [
     'webtest',
     'raven',
     'cornice',
+    'alembic',
 ]
 
 setup(name='jigglypuff',
