@@ -14,6 +14,16 @@ pyramid.default_locale_name = en
 
 sqlalchemy.url = sqlite:///file.db
 
+# Database settings
+sqlalchemy.url = sqlite:////home/jigglypuff/file.db
+
+# Jigglypuff specific settings
+jigglypuff.media_path = /home/jigglypuff/media
+
+# Raven settings
+raven.dsn = https://83778d5c4e00:48ccb24fa48745682919382@app.getsentry.com/1
+
+###
 ###
 # wsgi server configuration
 ###

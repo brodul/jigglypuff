@@ -29,6 +29,7 @@ requires = [
     'pyramid_jinja2',
     'pyramid_tm',
     'pyramid_debugtoolbar',
+    'pyramid_raven',
     'waitress',
     'sqlalchemy',
     'celery',

@@ -56,5 +56,7 @@ def main(global_config, **settings):
     config.include('pyramid_jinja2')
     config.include('pyramid_tm')
     config.include('cornice')
+    config.include('pyramid_layout')
+    config.include('pyramid_raven')
     config.scan()
     return config.make_wsgi_app()

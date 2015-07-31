@@ -100,6 +100,42 @@ let
     };
   };
 
+  pyramid_layout = pythonPackages.buildPythonPackage rec {
+    name = "pyramid_layout-1.0";
+
+    src = fetchurl {
+      url = "https://pypi.python.org/packages/source/p/pyramid_layout/pyramid_layout-1.0.tar.gz";
+      md5 = "e9c3fccefddd78f75bccb3f75df2de1f";
+    };
+    doCheck = false;
+
+    propagatedBuildInputs = with pythonPackages; [ pyramid ];
+
+    meta = with stdenv.lib; {
+      description = "==============";
+      homepage = http://docs.pylonsproject.org;
+    };
+  };
+
+
+  pyramid_raven = pythonPackages.buildPythonPackage rec {
+    name = "pyramid_raven-0.1.2";
+
+    src = fetchurl {
+      url = "https://pypi.python.org/packages/source/p/pyramid_raven/pyramid_raven-0.1.2.tar.gz";
+      md5 = "e7cd86b6f95067ce6ee6ba5d5b2e11f3";
+    };
+
+    doCheck = false;
+    propagatedBuildInputs = with pythonPackages; [ pyramid pyramid_layout raven ];
+
+    meta = with stdenv.lib; {
+      description = "[pyramid_raven][] integrates the [raven python client][] and [raven-js][] with";
+      homepage = http://github.com/thruflo/pyramid_raven;
+    };
+  };
+
+
 in
 
 buildPythonPackage {
@@ -113,6 +149,7 @@ buildPythonPackage {
     pyramid_jinja2
     pyramid_tm
     pyramid_debugtoolbar
+    pyramid_raven
     waitress
     sqlalchemy
     celery
