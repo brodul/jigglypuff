@@ -63,7 +63,7 @@ class transcode(ErrorMixin, object):
         url = url.strip()
 
         board = self.request.json_body.get("board")
-        if url == None:
+        if board == None:
             return self.client_error('No JSON key "board"')
         board = board.strip()
 
