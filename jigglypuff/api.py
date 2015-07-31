@@ -94,14 +94,14 @@ class board(ErrorMixin, object):
         """Returns a list of all boards."""
         return {"boards": {1: "main"}}
         # XXX
-        boards = {board.id: board.name for board in DBSession.query(Board).all()}
+        boards = dict((board.id, board.name) for board in DBSession.query(Board).all())
         return {'boards': boards}
 
     def get(self):
         return {
             "id": 1,
             "name": "main",
-            "songs": {song.id: song.get_dict() for song in DBSession.query(Song).all()},
+            "songs": dict((song.id, song.get_dict()) for song in DBSession.query(Song).all())
         }
         board = DBSession.query(Board).all()
         board_d = board.get_dict()
@@ -118,7 +118,7 @@ class songs(ErrorMixin, object):
         self.request = request
 
     def collection_get(self):
-        songs = {song.id: song.file_id for song in DBSession.query(Song).all() }
+        songs = dict((song.id, song.file_id) for song in DBSession.query(Song).all())
         return {'songs': songs}
 
     def get(self):
