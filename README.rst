@@ -8,7 +8,6 @@ Make sure you have the packets::
     ffmpeg
     python-virtualenv
     rabbitmq-server
-    youtube-dl
 
 
 You need this in ``/etc/rabbitmq/rabbitmq-env.conf``::
@@ -31,6 +30,9 @@ Install the deps::
 
     python setup.py install
 
+Run DB migrations::
+
+    alembic upgrade head
 
 Run the dev server::
 
