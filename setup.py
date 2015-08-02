@@ -42,6 +42,7 @@ requires = [
     'cornice',
     'alembic',
     'gunicorn',
+    'pafy',
 ]
 
 setup(name='jigglypuff',
