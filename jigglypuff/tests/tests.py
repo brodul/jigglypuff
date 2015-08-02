@@ -31,7 +31,7 @@ class FunctionalTestCase(unittest2.TestCase):
         uri = 'sqlite:///' + dbpath
         settings = {
             'sqlalchemy.url': uri,
-            'pyramid.includes': []
+            'pyramid.includes': [],
         }
         cls.engine = engine_from_config(settings, prefix='sqlalchemy.')
 
