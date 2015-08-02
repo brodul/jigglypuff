@@ -41,6 +41,7 @@ if raven_dsn:
     # `loglevel` which is the level used for the handler created.
     # Defaults to `logging.ERROR`
     register_logger_signal(client)
+    client.captureMessage('Celery worker restarted and working')
 
 def check_song_existence(youtube_id):
     """@todo: Docstring for check_song_existence.
