@@ -13,3 +13,6 @@ script:
 
 after_success:
   - "coveralls"
+  
+notifications:
+  irc: "chat.freenode.net#od1do7"
