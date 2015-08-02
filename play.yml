@@ -3,11 +3,10 @@
   hosts: all
   sudo: yes
   tasks:
-    - yum: name=python-virtualenv state=latest
-    - yum: name=rabbitmq-server state=latest
-    - yum: name=youtube-dl state=latest
-    - yum: name=ffmpeg state=latest
-    - yum: name=python-pip state=latest
+    - apt: name=python-virtualenv state=latest
+    - apt: name=rabbitmq-server state=latest
+    - apt: name=ffmpeg state=latest
+    - apt: name=python-pip state=latest
 
     - service: name=rabbitmq-server state=started
 
@@ -23,11 +22,27 @@
     - command: date +%d-%m-%y--%H-%M
       register: datetime
     - file: name=previous state=absent
-    - git: repo=https://github.com/brodul/jigglypuff.git dest={{ project_dir }}/{{ datetime.stdout }}
+    - git: repo=https://github.com/brodul/jigglypuff.git dest={{ project_dir }}/gitcache
+    - shell: "cp -r {{ project_dir }}/gitcache {{ project_dir }}/{{ datetime.stdout }} "
+    - shell: "rm -rf {{ project_dir }}/{{ datetime.stdout }}/nixpkgs "
     - shell: "mv {{ project_dir }}/current {{ project_dir }}/previous || :"
+    - command: virtualenv . chdir={{ project_dir }}/{{datetime.stdout}}
+    - command: bin/pip install setuptools --upgrade chdir={{ project_dir }}/{{datetime.stdout}}
+    - command: bin/python setup.py install chdir={{ project_dir }}/{{datetime.stdout}}
+    - file: path={{ project_dir }}/{{datetime.stdout}}/jigglypuff/media state=directory
+    - shell: |
+        sqlite3 file.db <<EOF
+        .timeout 20000
+        .backup backup{{ datetime.stdout }}.db
+        EOF
+      args:
+        chdir: "{{ project_dir }}"
+        result: backup_sh
+    - shell: "bin/alembic upgrade head"
+      args:
+        chdir: "{{ project_dir }}/{{ datetime.stdout }}"
+    - copy: src=production.ini dest={{ project_dir }}/{{ datetime.stdout }}production.ini
     - file: state=link src={{ project_dir }}/{{ datetime.stdout }} dest={{ project_dir }}/current
-    - pip: chdir={{ project_dir }}/current name=. virtualenv=.
-    - file: path={{ project_dir }}/current/jigglypuff/media state=directory
     
 - name: test play as root
   hosts: all
