@@ -27,7 +27,7 @@ Task_DBSession = scoped_session(
 engine = create_engine(settings['sqlalchemy.url'])
 Task_DBSession.configure(bind=engine)
 
-raven_dsn = settings.get('raven.dsn')
+raven_dsn = settings.get('worker.raven.dsn')
 if raven_dsn:
     client = Client()
     
