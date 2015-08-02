@@ -8,20 +8,39 @@ from sqlalchemy.orm import (
     sessionmaker,
 )
 from sqlalchemy.orm.exc import NoResultFound
-from zope.sqlalchemy import ZopeTransactionExtension
 import transaction
 import pafy
+from pyramid.paster import get_appsettings
+from raven import Client
+from raven.contrib.celery import register_signal, register_logger_signal
+from zope.sqlalchemy import ZopeTransactionExtension
 
 from jigglypuff.celery_utils import celery
 from jigglypuff.models import Song
 
+paster_uri = os.getenv('JIGGLYPUFF_PASTER_URI') or 'development.ini'
+settings = get_appsettings(paster_uri)
 
 Task_DBSession = scoped_session(
     sessionmaker(extension=ZopeTransactionExtension())
 )
-engine = create_engine('sqlite:///file.db')
+engine = create_engine(settings['sqlalchemy.url'])
 Task_DBSession.configure(bind=engine)
 
+raven_dsn = settings.get('raven.dsn')
+if raven_dsn:
+    client = Client()
+    
+    # register a custom filter to filter out duplicate logs
+    register_logger_signal(client)
+    
+    # hook into the Celery error handler
+    register_signal(client)
+    
+    # The register_logger_signal function can also take an optional argument
+    # `loglevel` which is the level used for the handler created.
+    # Defaults to `logging.ERROR`
+    register_logger_signal(client)
 
 def check_song_existence(youtube_id):
     """@todo: Docstring for check_song_existence.
@@ -56,7 +75,6 @@ def transcode2ogg(full_file_path):
         command,
         shell=True,
         stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT
         )
     p.communicate()[0]
     return ogg_file
