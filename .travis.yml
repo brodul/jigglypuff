@@ -13,6 +13,9 @@ script:
 
 after_success:
   - "coveralls"
+
+after_script:
+  - "flake8 jigglypuff || true"
   
 notifications:
   irc: "chat.freenode.net#od1do7"
