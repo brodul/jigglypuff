@@ -3,7 +3,6 @@ python:
   - "2.6"
   - "2.7"
 # command to run tests
-script: nosetests
 install:
   - "pip install coveralls flake8"
   - "pip install ."
@@ -19,3 +18,4 @@ after_script:
   
 notifications:
   irc: "chat.freenode.net#od1do7"
+    on_success: change
