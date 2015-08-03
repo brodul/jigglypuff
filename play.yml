@@ -41,7 +41,7 @@
     - shell: "bin/alembic upgrade head"
       args:
         chdir: "{{ project_dir }}/{{ datetime.stdout }}"
-    - copy: src=production.ini dest={{ project_dir }}/{{ datetime.stdout }}production.ini
+    - copy: src=production.ini dest={{ project_dir }}/{{ datetime.stdout }}/production.ini
     - file: state=link src={{ project_dir }}/{{ datetime.stdout }} dest={{ project_dir }}/current
     
 - name: test play as root
@@ -49,8 +49,10 @@
   sudo: yes
   vars: 
     project_dir: /home/jigglypuff
+  tags:
+    - last
   tasks:
 
-    - shell: "mv {{ project_dir }}/current/supervisor/jigglypuff.conf /etc/supervisor.d/jigglypuff.conf || :"
+    - shell: "mv {{ project_dir }}/current/supervisor/jigglypuff.conf /etc/supervisor/conf.d/jigglypuff.conf || :"
     - supervisorctl: name="jigglypuff:jigglypuff-pyramid" state=restarted
     - supervisorctl: name="jigglypuff:jigglypuff-worker" state=restarted
