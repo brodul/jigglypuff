@@ -27,6 +27,7 @@ def get_version(filename):
 requires = [
     'pyramid',
     'pyramid_jinja2',
+    'pyramid_mako',
     'pyramid_tm',
     'pyramid_debugtoolbar',
     'pyramid_raven',

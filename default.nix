@@ -146,6 +146,7 @@ buildPythonPackage {
     virtualenv
     git
     pyramid
+    pyramid_mako
     pyramid_jinja2
     pyramid_tm
     pyramid_debugtoolbar

@@ -54,6 +54,8 @@ def main(global_config, **settings):
     config.add_static_view('media', media_path, cache_max_age=3600)
     config.add_route('home', '/')
     config.include('pyramid_jinja2')
+    # XXX pyramid_mako is needed because od pyramid_raven :/
+    config.include('pyramid_mako')
     config.include('pyramid_tm')
     config.include('cornice')
     config.include('pyramid_layout')
