@@ -29,7 +29,7 @@ Task_DBSession.configure(bind=engine)
 
 raven_dsn = settings.get('worker.raven.dsn')
 if raven_dsn:
-    client = Client()
+    client = Client(raven_dsn)
     
     # register a custom filter to filter out duplicate logs
     register_logger_signal(client)
