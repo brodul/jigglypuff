@@ -23,7 +23,7 @@ notifications:
     on_success: change
   webhooks:
     urls:
-      - http://moon.brodul.org:9999/hubot/travis
+      - http://moon.brodul.org/hubot/travis
     on_success: always
     on_failure: never
     on_start: never   
