@@ -1,5 +1,5 @@
 with import <nixpkgs> {};
-with pkgs.python27Packages; 
+with pkgs.python27Packages;
 
 let
 
@@ -141,7 +141,7 @@ in
 buildPythonPackage {
   name = "jigglypuff";
 
-  propagatedBuildInputs = [ 
+  propagatedBuildInputs = [
     python
     virtualenv
     git

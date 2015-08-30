@@ -15,7 +15,7 @@ after_success:
 
 after_script:
   - "flake8 jigglypuff || true"
-  
+
 notifications:
   irc:
     channels:
@@ -26,4 +26,4 @@ notifications:
       - http://moon.brodul.org/hubot/travis
     on_success: always
     on_failure: never
-    on_start: never   
+    on_start: never

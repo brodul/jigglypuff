@@ -16,7 +16,7 @@
   hosts: all
   sudo: yes
   sudo_user: jigglypuff
-  vars: 
+  vars:
     project_dir: /home/jigglypuff
   tasks:
     - command: date +%d-%m-%y--%H-%M
@@ -43,11 +43,11 @@
         chdir: "{{ project_dir }}/{{ datetime.stdout }}"
     - copy: src=production.ini dest={{ project_dir }}/{{ datetime.stdout }}/production.ini
     - file: state=link src={{ project_dir }}/{{ datetime.stdout }} dest={{ project_dir }}/current
-    
+
 - name: test play as root
   hosts: all
   sudo: yes
-  vars: 
+  vars:
     project_dir: /home/jigglypuff
   tags:
     - last

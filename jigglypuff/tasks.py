@@ -30,13 +30,13 @@ Task_DBSession.configure(bind=engine)
 raven_dsn = settings.get('worker.raven.dsn')
 if raven_dsn:
     client = Client(raven_dsn)
-    
+
     # register a custom filter to filter out duplicate logs
     register_logger_signal(client)
-    
+
     # hook into the Celery error handler
     register_signal(client)
-    
+
     # The register_logger_signal function can also take an optional argument
     # `loglevel` which is the level used for the handler created.
     # Defaults to `logging.ERROR`
@@ -143,6 +143,9 @@ def main_task(url, media_path, audio_format=None, Task_DBSession=Task_DBSession)
     full_file_path = os.path.join(media_path, file_name)
 
     stream.download(full_file_path)
+
+
+
 
     full_ogg_file = transcode2ogg(full_file_path)
     ogg_file = os.path.basename(full_ogg_file)

@@ -9,7 +9,7 @@
 
 
   <style>
-  
+
   </style>
 </head>
 <body>
@@ -20,7 +20,7 @@
     </div>
 
     <div id="content"></div>
-    
+
 <script type="text/jsx">
 
 function ready(fn) {
@@ -35,7 +35,7 @@ ready(function () {
 
 
   var get = function (url, success) {
-  
+
     var request = new XMLHttpRequest();
     request.open('GET', url, true);
 
@@ -93,7 +93,7 @@ ready(function () {
         <audio controls preload="metadata">
         <source src={this.props.song_source} type="audio/ogg"/>
         Your browser does not support the audio element.
-          </audio> 
+          </audio>
       );
     },
   });
@@ -110,7 +110,7 @@ ready(function () {
             <td>{this.props.youtube_id}</td>
             <td>
             <a href={song_source}>
-              {this.props.title} 
+              {this.props.title}
             </a>
             </td>
             <td>
@@ -135,7 +135,7 @@ ready(function () {
               }
             }
             this.setState({songs: songs_array});
-          }.bind(this) 
+          }.bind(this)
       );
     },
     componentDidMount: function() {
@@ -267,4 +267,3 @@ React.render(
   </div>
 </body>
 </html>
-
