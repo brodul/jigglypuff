@@ -9,12 +9,10 @@ install:
 
 script:
   - "nosetests --with-coverage --cover-package=jigglypuff"
+  - "flake8 jigglypuff --ignore=E501"
 
 after_success:
   - "coveralls"
-
-after_script:
-  - "flake8 jigglypuff || true"
 
 notifications:
   irc:

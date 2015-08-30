@@ -1,4 +1,5 @@
 import logging
+import socket
 
 from cornice import Service
 from cornice.resource import resource
@@ -15,7 +16,7 @@ log = logging.getLogger(__name__)
 class ErrorMixin(object):
     def client_error(self, msg):
         self.request.response.status_code = 400
-        return {'error':  True, 'error_msg': msg}
+        return {'error': True, 'error_msg': msg}
 
 
 status = Service(
@@ -58,19 +59,19 @@ class transcode(ErrorMixin, object):
     def collection_post(self):
         # DRY
         url = self.request.json_body.get('url')
-        if url == None:
+        if url is None:
             return self.client_error('No JSON key "url"')
         url = url.strip()
 
         board = self.request.json_body.get("board")
-        if board == None:
+        if board is None:
             return self.client_error('No JSON key "board"')
         board = board.strip()
 
         # check if id and file all ready exists
         if board != 'main':
             self.request.response.status_code = 400
-            return {'error':  True, 'error_msg': 'Invalid board.'}
+            return {'error': True, 'error_msg': 'Invalid board.'}
         main_task.s(
             url,
             media_path=self.request.registry.settings['jigglypuff.media_path']

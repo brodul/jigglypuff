@@ -43,6 +43,7 @@ if raven_dsn:
     register_logger_signal(client)
     client.captureMessage('Celery worker restarted and working')
 
+
 def check_song_existence(youtube_id):
     """@todo: Docstring for check_song_existence.
 
@@ -76,7 +77,7 @@ def transcode2ogg(full_file_path):
         command,
         shell=True,
         stdout=subprocess.PIPE,
-        )
+    )
     p.communicate()[0]
     return ogg_file
 
@@ -143,9 +144,6 @@ def main_task(url, media_path, audio_format=None, Task_DBSession=Task_DBSession)
     full_file_path = os.path.join(media_path, file_name)
 
     stream.download(full_file_path)
-
-
-
 
     full_ogg_file = transcode2ogg(full_file_path)
     ogg_file = os.path.basename(full_ogg_file)

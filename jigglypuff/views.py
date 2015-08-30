@@ -24,7 +24,7 @@ def system_error_view(context, request):
     # ...
 
     log.error("Traceback: %s", context, exc_info=(context))
-    response =  Response('%s' % context)
+    response = Response('%s' % context)
     response.status_int = 500
 
     return response

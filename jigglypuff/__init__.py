@@ -10,7 +10,6 @@ from pyramid.session import UnencryptedCookieSessionFactoryConfig
 from sqlalchemy import engine_from_config
 
 from jigglypuff.models import DBSession
-from jigglypuff.models import Base
 
 import os
 
@@ -37,7 +36,7 @@ def main(global_config, **settings):
         media_path if media_path[-1] == os.sep else media_path + os.sep
     try:
         os.mkdir(media_path)
-    except OSError as e:
+    except OSError:
         logger.info("Media directory already exist.")
         logger.debug("Exception:", exc_info=True)
 

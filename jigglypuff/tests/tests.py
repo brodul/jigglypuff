@@ -1,18 +1,12 @@
 import os.path
-from mock import patch
 import unittest2
 from pyramid import testing
-
 
 from sqlalchemy import engine_from_config
 from sqlalchemy.orm import sessionmaker
 
 from jigglypuff.models import Base as Entity
 from jigglypuff.models import DBSession as Session
-from jigglypuff.tests import (
-    INTERNET,
-    TRAVIS
-)
 
 __here__ = os.path.dirname(os.path.realpath(__file__))
 
