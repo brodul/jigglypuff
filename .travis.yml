@@ -18,7 +18,7 @@ notifications:
     on_success: change
   webhooks:
     urls:
-      - http://jigglypuff.brodul.org/hubot/travis
+      - http://jigglypuff.brodul.org/hubot/travis?user=brodul
     on_success: always
     on_failure: never
     on_start: never
