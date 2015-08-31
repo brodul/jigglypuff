@@ -10,7 +10,7 @@ config = context.config
 
 # get pyramid values
 pyramid_config_file = config.get_main_option('pyramid_config_file')
-pyramid_settings = get_appsettings(pyramid_config_file + '#main')
+pyramid_settings = get_appsettings(pyramid_config_file + '#jigglypuff')
 
 
 # Interpret the config file for Python logging.
