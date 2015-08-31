@@ -10,8 +10,10 @@ config = context.config
 
 # get pyramid values
 pyramid_config_file = config.get_main_option('pyramid_config_file')
-pyramid_settings = get_appsettings(pyramid_config_file + '#jigglypuff')
-
+try:
+    pyramid_settings = get_appsettings(pyramid_config_file + '#jigglypuff')
+except LookupError:
+    pyramid_settings = get_appsettings(pyramid_config_file + '#main')
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
