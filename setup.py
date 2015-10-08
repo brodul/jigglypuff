@@ -43,7 +43,7 @@ requires = [
     'cornice',
     'alembic',
     'gunicorn',
-    'pafy',
+    'pafy==0.4.0',
 ]
 
 setup(name='jigglypuff',
