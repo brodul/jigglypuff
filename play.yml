@@ -29,7 +29,7 @@
     - shell: "mv {{ project_dir }}/current {{ project_dir }}/previous || :"
     - command: virtualenv . chdir={{ project_dir }}/{{datetime.stdout}}
     - command: bin/pip install setuptools --upgrade chdir={{ project_dir }}/{{datetime.stdout}}
-    - command: bin/python setup.py install chdir={{ project_dir }}/{{datetime.stdout}}
+    - command: bin/pip install . chdir={{ project_dir }}/{{datetime.stdout}}
     - file: path={{ project_dir }}/{{datetime.stdout}}/jigglypuff/media state=directory
     - shell: |
         sqlite3 file.db <<EOF
