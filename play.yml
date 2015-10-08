@@ -1,6 +1,7 @@
 ---
 - name: test play as root
   hosts: all
+  remote_user: jigglypuff
   sudo: yes
   tasks:
     - apt: name=python-virtualenv state=latest
@@ -10,12 +11,10 @@
 
     - service: name=rabbitmq-server state=started
 
-    - user: name=jigglypuff
 
 - name: test play as project user
   hosts: all
-  sudo: yes
-  sudo_user: jigglypuff
+  remote_user: jigglypuff
   vars:
     project_dir: /home/jigglypuff
   tasks:
@@ -46,6 +45,7 @@
 
 - name: test play as root
   hosts: all
+  remote_user: jigglypuff
   sudo: yes
   vars:
     project_dir: /home/jigglypuff
