@@ -1,7 +1,7 @@
 ---
 - name: test play as root
   hosts: all
-  remote_user: jigglypuff
+  remote_user: hubot
   sudo: yes
   tasks:
     - apt: name=python-virtualenv state=latest
@@ -14,7 +14,9 @@
 
 - name: test play as project user
   hosts: all
-  remote_user: jigglypuff
+  remote_user: hubot
+  sudo_user: jigglypuff
+  sudo: yes
   vars:
     project_dir: /home/jigglypuff
   tasks:
@@ -45,7 +47,7 @@
 
 - name: test play as root
   hosts: all
-  remote_user: jigglypuff
+  remote_user: hubot
   sudo: yes
   vars:
     project_dir: /home/jigglypuff
