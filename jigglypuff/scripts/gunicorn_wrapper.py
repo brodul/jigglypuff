@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+import os
 import multiprocessing
 import sys
 
@@ -30,8 +31,9 @@ class StandaloneApplication(gunicorn.app.base.BaseApplication):
 
 
 def main():
+    port = os.environ.get("PORT", 8080)
     options = {
-        'bind': '%s:%s' % ('127.0.0.1', '8080'),
+        'bind': '%s:%s' % ('127.0.0.1', port),
         'workers': number_of_workers(),
     }
     StandaloneApplication(sys.argv[1], options).run()

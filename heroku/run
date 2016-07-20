@@ -1,0 +1,4 @@
+#!/bin/bash
+set -e
+python setup.py install
+python heroku/runapp.py
